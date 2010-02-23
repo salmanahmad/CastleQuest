@@ -1,0 +1,273 @@
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<title>3DE</title>
+		<style type="text/css" media="screen">
+			body {
+				background-color:black;
+				margin:0px;
+				padding:0px;
+				font-family:Helvetica, Arial, Sans-Serif;
+			}
+			
+			#progress {
+				border:1px solid gray;
+				width:340px;
+				margin:auto;
+				margin-top:25px;
+				
+				background-color:white;
+				-webkit-border-radius:5px;
+				
+				padding-top:4px;
+				padding-bottom:4px;				
+				text-align:center;
+				
+			}
+			
+			#content {
+				width:300px;
+				margin:auto;
+				margin-top:50px;
+				border:1px solid white;
+				background-color:white;
+				padding:20px;
+				text-align:center;
+				
+				-webkit-border-radius:5px;
+				
+			}
+			
+			.box {
+				border:1px solid gray;
+				padding:10px;
+				width:50%;
+				margin:auto;
+				margin-top:10px;
+				margin-bottom:20px;
+				color:gray;
+				font-size:12px;		
+				font-style: italic;
+			}
+			
+			.box .number {
+				color:black;
+				font-size:20px;
+				font-style: normal;
+				font-weight:bold;
+			}
+			
+			#target .number {
+				font-size:35px;
+			}
+			
+			#toolbar {
+				color:gray;
+				font-size:10px;		
+				font-style: italic;
+				margin-bottom:10px;
+			}
+			
+			#toolbar {
+				display:none;
+			}
+			
+			#buttons {
+				margin-bottom:10px;
+			}
+			
+			#buttons input {
+				margin:0px 5px;
+			}
+			
+			.message {
+				display:none;
+				margin-top:10px;
+				margin-bottom:10px;
+				padding:5px;
+				font-size:12px;
+				font-weight:bold;
+				background-color:gray;
+				-webkit-border-radius:5px;
+			}
+			
+			#great {
+				background-color:#3BDC46;
+			}
+			
+			#bad {
+				background-color:#99252B;
+				color:white;
+			}
+			
+		</style>
+		
+		<script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+		<script type="text/javascript" charset="utf-8">
+		
+			var start = 0;
+			var end = 5;
+			var distance = 0;
+		
+			var current = -1;
+			var target = -1;
+			
+			var cards_used = 0;
+			var start_time = null;
+			var time_weight = 1000000000000;
+			
+			var hand_size = 6;
+			var card_limit = 5; 
+			
+			
+			function set_current(i) {
+				current = i;
+				$("#current .number").html(current);
+			}
+			
+			function set_target() {
+				
+				var increment = 0;
+				for(var i = 0; i < 3; i++) {
+					increment += random();
+				}
+				
+				target = current + increment;
+				$("#target .number").html(target);
+			}
+			
+			function update_distance() {
+					var time = (new Date()) - start_time;
+					var increment = cards_used + (1/time) * time_weight;
+					
+					increment = cards_used;
+					distance += increment;
+					
+					$("#progress").html(distance);
+			}
+			
+			function start_round() {
+				cards_used = 0;
+				start_time = new Date();
+			}
+			
+			function deal_cards() {
+				var count = $("#buttons input").size();
+				for(var i = 0; i < hand_size - count; i++) {
+					 $("#buttons").append('<input type="button" class="card" value="' + random() + '" />')
+				}
+			}
+			
+			function random() {
+				return Math.ceil(Math.random()*card_limit);
+			}
+			
+			
+			function reset_game() {
+				distance = start;
+				$("#start").show();
+				$("#toolbar").hide();
+			}
+			
+			function start_game() {
+				$("#start").hide();
+				$("#toolbar").show();
+
+				$("#progress").html("&nbsp;")
+
+				
+				set_current(random());
+				set_target();
+				
+				deal_cards();
+			}
+			
+			
+			$(function() {
+				
+				$("#start").click(start_game);
+				
+				$(".card").live('click', function() {
+					
+					cards_used++;
+					
+					var value = parseInt($(this).val());
+					value += current;
+					
+					$(this).remove();
+					
+					set_current(value);
+					deal_cards();						
+
+					$(".message").hide();
+
+					if(value == target) {
+						update_distance();
+						set_target();
+						start_round();
+						
+						$("#great").show();
+						$("#great").fadeOut(1000);
+						
+					} else if(value > target) {
+						set_target();
+						start_round();
+						
+						$("#bad").show();
+						$("#bad").fadeOut(1000);
+					}
+					
+					if(distance >= end) {
+						alert("You Win!");
+						reset_game();
+					}
+					
+				});
+				
+			});
+		</script>
+		
+	</head>
+	<body id="index" onload="">
+		<div id="content">
+			
+
+			
+			<div class="box" id="current">
+				<div class="number">
+					?
+				</div>
+				Current Number
+			</div>
+			<div class="box" id="target">
+				<div class="number">
+					?
+				</div>
+				Target Number		
+			</div>
+			<div id="start">
+				<input type="button" name="start" value="Start" id="start">
+			</div>
+			<div id="toolbar">
+				<div id="buttons">
+					
+				</div>
+				Hit Esc. To Skip				
+			</div>
+			
+			<div class="message" id="great">
+				Great!
+			</div>
+			
+			<div class="message" id="bad">
+				Oops!
+			</div>
+			
+		</div>
+		
+		<div id="progress">
+			&nbsp;
+		</div>
+		
+	</body>
+</html>
