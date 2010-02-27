@@ -16,7 +16,6 @@ void draw()
 	graphicsController.draw();
 
 	//just testing
-	graphicsController.renderHealth(.5,0);
 }
 
 /* Global Convenience Methods... */

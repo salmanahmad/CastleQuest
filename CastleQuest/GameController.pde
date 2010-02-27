@@ -31,8 +31,8 @@ class GameController
 
 		networkController = new NetworkController();
 		
-		player1 = new Player("Player1");
-		player2 = new Player("Player2");
+		player1 = new Player("Player1", gc);
+		player2 = new Player("Player2", gc);
 
 	}
 	public void newCard(int reader, int card)
@@ -55,6 +55,8 @@ class GameController
 			return;
 		}
 
+
+                graphicsController.renderAttack(1,reader - 1);
 
 		p.cards_used++;
 		p.incrementCurrent(card);
@@ -98,6 +100,7 @@ class GameController
 class Player
 {
 
+        public GraphicsController graphicsController;
 	public String name;
 
 	public int distance = 0;
@@ -109,8 +112,9 @@ class Player
 	public int start_time = 0;
 	public int time_weight = 100000000;
 
-	Player(String name) {
+	Player(String name, GraphicsController gc) {
 		this.name = name;
+                this.graphicsController = gc;
 	}
 
 	public void resetCards() {

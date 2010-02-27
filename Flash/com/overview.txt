@@ -1,0 +1,90 @@
+Title: Overview
+
+Using Phidgets with ActionScript 3.0
+
+Topic: Introduction
+
+Phidgets can be used with ActionScript 3.0 using the supplied library. All Phidget devices are supported. The library is network based, as there is no way to access hardware directly from AS3.0, so the Phidget WebService must first be running.
+
+Topic: Compatibility
+
+Actionscript 3.0 (Flash CS3, Flex 2, Flex 3, etc.).
+
+Requires Phidget21 and the PhidgetWebservice21.
+
+Note that Flash 8 is not supported as it does not support Actionscript 3.0
+
+Topic: General Usage
+
+Using Phidgets in Flash/Flex requires the use of the Phidget Webservice for Phidget21. This must be running on the computer on which your Phidgets are connected, which is not neccesarily the computer that your Flash/Flex app is running on.
+
+Security:
+
+The PhidgetWebService will automatically act as a Policy file server, and the Phidget Flash library will load this policy file. The Policy file allows access from any host to the port that the webservice is running on. If you need to implement a protected connection, you can use the password functionality of the webservice.
+
+
+Flash CS3 Usage:
+
+To use this library in Flash CS3, copy the com folder that is located in the Flash CS3 folder, of the download, in your project root. 
+
+
+In your source files, import the phidget library.
+
+>import com.phidgets.*;
+>import com.phidgets.events.*;
+
+Look at the provided examples and the rest of this API manual for usage guidelines.
+
+
+Flex 2 Usage:
+
+In the Flex 2 folder, there are complete examples in the FlexExamples folder as well as a simple but complete example for the usage of each Phidget in the TestingExamples folder. Have a look at the code for your Phidget to see how it is to be used.
+
+The Phidget21Library.swc library should be referenced for any projects that you write in Flex.
+
+To add a reference open your project and then select the "Project" menu
+
+- Select "Properties"
+- Click on "Flex Builder Path"
+- Select "Library" Tab
+- Click "Add SWC File"
+- Browse to the Flex 2 folder and find the "Phidget21Library.swc"
+- Press OK
+
+You can load the FlexExamples project in Flex, and compile it after referencing the Flex library file Phidget21Library.swc.
+
+Topic: Events
+
+Events are handled by the PhidgetEvent class and it's subclasses. All data events are handeled by PhidgetDataEvent. Attach, Detach, Connect and Disconnect events are handled by PhidgetEvent. Manager events are handled by PhidgetManagerEvent. Dictionary Events are handled by PhidgetDictionaryEvent. There are also error events, which are handled by PhidgetErrorEvent.
+
+All Phidget classes extend EventDispatcher, which exposes the addEventListener method. This is how you add all events.
+
+For examples, to add an attach event handler:
+
+>phid.addEventListener(PhidgetEvent.ATTACH, onAttach);
+
+where onAttach is a function of the following form:
+
+>private function onAttach(evt:PhidgetEvent):void{}
+
+To add a sensor change event to the InterfaceKit:
+
+>phid.addEventListener(PhidgetDataEvent.SENSOR_CHANGE, onSensorChange);
+
+where onSensorChange is a function of the following form:
+
+>private function onSensorChange(evt:PhidgetDataEvent):void{}
+
+Each Phidget supports a certain subset of events, as dictated on it's documentation page. Also, have a look at the example for more details.
+
+Topic: Security
+
+The PhidgetWebService acts as a policy file server. It will respond with the following policy file, where the port will be whatever port it is running on (maybe not 5001).
+
+><?xml version="1.0"?>
+><!DOCTYPE cross-domain-policy SYSTEM "/xml/dtds/cross-domain-policy.dtd">
+><cross-domain-policy>
+>   <allow-access-from domain="*" to-ports="5001" />
+></cross-domain-policy>
+
+This allows the webservice to be accessed via flash from any system, and is included because the latest flash version requires a socket policy file for ALL socket connections. If you need to resrict this to something other then *, you can define a socket meta-policy file youself to overide the setting. Also, security can be acheived in another way by running the webservice with a password.
