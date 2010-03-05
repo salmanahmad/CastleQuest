@@ -24,6 +24,12 @@ package code {
 			currentText.text = value;
 		}
 
+		public function reset():void {
+			currentText.text = "?";
+			targetText.text = "?";
+		}
+
+
 
 	}
 }
