@@ -12,6 +12,10 @@ package code {
 	
 	public class ScoreBoard extends MovieClip {
 		
+		public function ScoreBoard() {
+			nameText.visible = false;
+		}
+		
 		public function setName(value:String):void {
 			nameText.text = value;
 		} 
