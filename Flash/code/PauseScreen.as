@@ -13,12 +13,12 @@ package code {
 	public class PauseScreen extends MovieClip {
 		
 		public function showPause():void {
-			this.visible = true;
 
+			this.visible = true;
 			this.pauseText.visible = true;
 			this.continueText.visible = true;
 			this.restartText.visible = true;
-			
+
 		}
 		
 		public function showStart():void {
